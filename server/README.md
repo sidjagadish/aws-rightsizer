@@ -17,11 +17,12 @@ For full local setup (database + backend + frontend), see the [repo root README]
 python -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
+uvicorn app.main:app --reload --port 8000 --reload-exclude '.venv'
 ```
 
 - **Root:** http://localhost:8000/
 - **Health:** http://localhost:8000/api/health
+- **DB ping:** http://localhost:8000/api/db/ping (checks backend ↔ Postgres)
 
 ## Config
 
@@ -37,7 +38,8 @@ Optional `server/.env`:
 ```
 server/
 ├── app/
-│   ├── api/       # Route modules (e.g. health)
+│   ├── api/       # Route modules (health, db)
+│   ├── db/        # SQLAlchemy engine, session, get_db
 │   ├── config.py  # Settings (env)
 │   └── main.py    # FastAPI app, CORS, routers
 ├── requirements.txt

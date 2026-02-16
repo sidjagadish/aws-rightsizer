@@ -34,7 +34,7 @@ From a fresh clone, use this order. Each section below assumes you’re in the p
    python -m venv .venv
    source .venv/bin/activate   # Windows: .venv\Scripts\activate
    pip install -r requirements.txt
-   uvicorn app.main:app --reload --port 8000
+   uvicorn app.main:app --reload --port 8000 --reload-exclude '.venv'
    ```
    Leave this terminal running; open a new one for the frontend.
 3. **Frontend** – from repo root (new terminal):
@@ -54,6 +54,8 @@ From a fresh clone, use this order. Each section below assumes you’re in the p
 | `server/` | FastAPI backend. See [Backend (FastAPI)](#backend-fastapi) below. |
 | `client/` | React + Vite + TypeScript + Tailwind frontend. [client/README.md](client/README.md) has full details. |
 | `docker-compose.yml` | PostgreSQL 18 service (`db`) |
+
+**Contributing** — Branch naming, PRs into `dev`, and how to run the stack: see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
@@ -128,13 +130,14 @@ cd server
 python -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
+uvicorn app.main:app --reload --port 8000 --reload-exclude '.venv'
 ```
 
 If your system uses `python3` instead of `python`, use `python3 -m venv .venv` and `python3` for any later commands.
 
 - API root: **http://localhost:8000/**  
-- Health: **http://localhost:8000/api/health**
+- Health: **http://localhost:8000/api/health**  
+- DB connectivity check: **http://localhost:8000/api/db/ping** (requires DB running)
 
 ### Environment (optional)
 

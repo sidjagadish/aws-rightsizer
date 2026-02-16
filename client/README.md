@@ -56,5 +56,5 @@ client/
 ## Backend / API
 
 The app calls the FastAPI backend at **http://localhost:8000** (override with `VITE_API_BASE_URL`).  
-Backend lives in [server/](../server/) at the repo root. Run it with `uvicorn app.main:app --reload --port 8000` from `server/` (see root [README](../README.md)).  
+Backend lives in [server/](../server/) at the repo root. Run it with `uvicorn app.main:app --reload --port 8000 --reload-exclude '.venv'` from `server/` (see root [README](../README.md)).  
 Current endpoint: `GET /api/health`. Planned: `GET /api/findings`, `GET /api/instances`.

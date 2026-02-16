@@ -2,6 +2,14 @@
 
 React + Vite + TypeScript + Tailwind CSS. Phase 2 scaffold: routing and UI shell in place.
 
+**Run all commands below from the `client/` directory** (or from repo root: `cd client` first).
+
+For full local setup (database + backend + frontend), see the [repo root README](../README.md).
+
+## Requirements
+
+- Node.js 18+ and npm
+
 ## Quick start
 
 ```bash
@@ -9,7 +17,7 @@ npm install
 npm run dev
 ```
 
-Open **http://localhost:5173** in your browser.
+Open **http://localhost:5173** in your browser. The app expects the backend at http://localhost:8000 (see root README to run the API).
 
 ## Scripts
 
@@ -47,5 +55,6 @@ client/
 
 ## Backend / API
 
-The app expects an API at **http://localhost:8000** (override with `VITE_API_BASE_URL`).  
-Planned endpoints: `GET /api/findings`, `GET /api/instances`. Backend is not part of this repo yet.
+The app calls the FastAPI backend at **http://localhost:8000** (override with `VITE_API_BASE_URL`).  
+Backend lives in [server/](../server/) at the repo root. Run it with `uvicorn app.main:app --reload --port 8000` from `server/` (see root [README](../README.md)).  
+Current endpoint: `GET /api/health`. Planned: `GET /api/findings`, `GET /api/instances`.

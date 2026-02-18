@@ -16,6 +16,7 @@ Cloud optimization tool for EC2: analyze utilization and pricing, get cost- and 
 - **Docker Desktop** – install and have it **running** before starting the database
 - **Python 3.11+** (for the backend; on some systems the command is `python3`)
 - **Node.js 18+** and npm (for the frontend)
+- **Poetry 2.0+**
 
 ---
 
@@ -31,10 +32,10 @@ From a fresh clone, use this order. Each section below assumes you’re in the p
 2. **Backend** – from repo root:
    ```bash
    cd server
-   python -m venv .venv
-   source .venv/bin/activate   # Windows: .venv\Scripts\activate
-   pip install -r requirements.txt
-   uvicorn app.main:app --reload --port 8000 --reload-exclude '.venv'
+   install poetry if not already
+   brew install poetry (mac)
+   poetry install
+   poetry run uvicorn app.main:app --reload --port 8000 --reload-exclude '.venv'
    ```
    Leave this terminal running; open a new one for the frontend.
 3. **Frontend** – from repo root (new terminal):
@@ -127,10 +128,9 @@ All commands below: run from the **repo root** then `cd server`, or from inside 
 
 ```bash
 cd server
-python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000 --reload-exclude '.venv'
+brew install poetry (mac)
+poetry install
+poetry run uvicorn app.main:app --reload --port 8000 --reload-exclude '.venv'
 ```
 
 If your system uses `python3` instead of `python`, use `python3 -m venv .venv` and `python3` for any later commands.

@@ -10,14 +10,12 @@ For full local setup (database + backend + frontend), see the [repo root README]
 
 - Python 3.11+ (use `python3` if `python` is not available)
 - PostgreSQL 18 running — from repo root: `docker compose up -d` (see root README)
-
+- Poetry 2.0+ (install from preferred package manager)
 ## Quick start
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000 --reload-exclude '.venv'
+poetry install
+poetry run uvicorn app.main:app --reload --port 8000 --reload-exclude '.venv'
 ```
 
 - **Root:** http://localhost:8000/
@@ -42,6 +40,7 @@ server/
 │   ├── db/        # SQLAlchemy engine, session, get_db
 │   ├── config.py  # Settings (env)
 │   └── main.py    # FastAPI app, CORS, routers
-├── requirements.txt
+├── poetry.lock
+├── pyproject.toml
 └── README.md
 ```

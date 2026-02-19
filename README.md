@@ -128,7 +128,6 @@ All commands below: run from the **repo root** then `cd server`, or from inside 
 
 ```bash
 cd server
-brew install poetry (mac)
 poetry install
 poetry run uvicorn app.main:app --reload --port 8000 --reload-exclude '.venv'
 ```

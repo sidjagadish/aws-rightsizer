@@ -28,10 +28,14 @@ git checkout -b feature/add-findings-list
 ## Running the stack locally
 
 1. **Database** — from repo root: `docker compose up -d` (see [README](README.md#database-postgresql-18)).
-2. **Backend** — from repo root: `cd server`, create venv, `pip install -r requirements.txt`, `uvicorn app.main:app --reload --port 8000 --reload-exclude '.venv'`.
+2. **Backend** — from repo root: `cd server`, `poetry install`, `poetry run uvicorn app.main:app --reload --port 8000 --reload-exclude '.venv'`.
 3. **Frontend** — from repo root: `cd client`, `npm install`, `npm run dev`; open http://localhost:5173.
 
 Full step-by-step: [README → Run everything (first time)](README.md#run-everything-first-time).
+
+## Adding dependencies
+- Virtual enviornment is managed by `poetry`
+- Add new packages using `poetry add <package name>`
 
 ## Summary
 

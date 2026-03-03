@@ -1,0 +1,21 @@
+# Virtual env
+.venv
+venv
+env
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Env (commit .env.example only if added)
+.env
+.env.*
+!.env.example
+
+# IDE / OS
+.idea
+.DS_Store
+*.sw?

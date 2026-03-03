@@ -65,5 +65,10 @@ jobs:
 
       - name: Verify server can start
         run: |
-          poetry run python -c "import app.main; print('app loaded')"
-          timeout 10s poetry run uvicorn app.main:app --host 127.0.0.1 --port 8000
+          set -e
+          timeout 10s poetry run uvicorn app.main:app --host 127.0.0.1 --port 8000 || code=$?
+          if [ "${code:-0}" -eq 124 ]; then
+            echo "Uvicorn started successfully (timed out as expected)."
+            exit 0
+          fi
+          exit "${code:-0}"

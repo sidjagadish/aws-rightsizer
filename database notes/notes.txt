@@ -1,0 +1,88 @@
+docker compose exec db psql -U postgres -d rightsizer -c "SELECT * FROM scan_run;"
+
+docker compose exec db psql -U postgres -d rightsizer -c "
+    DROP TABLE IF EXISTS scan_run CASCADE;
+    CREATE TABLE scan_run (
+        run_id SERIAL PRIMARY KEY,
+        model_version VARCHAR(100),
+        id_filter INT[],
+        region_filter VARCHAR(50)[],
+        observation_window VARCHAR(50),
+        status VARCHAR(20) NOT NULL DEFAULT 'pending',
+        started_on DATE,
+        completed_on DATE,
+        scanned_count INT DEFAULT 0,
+        initiated_by VARCHAR(100)
+    );
+"
+
+
+docker compose exec db psql -U postgres -d rightsizer -c "
+CREATE TABLE ec2_instance (
+    resource_id SERIAL PRIMARY KEY,
+    arn VARCHAR(255),
+    region VARCHAR(50),
+    owner_id INT,
+    architecture VARCHAR(50),
+    platform VARCHAR(50),
+    tenancy VARCHAR(50),
+    tags VARCHAR[]
+);
+"
+
+docker compose exec db psql -U postgres -d rightsizer -c "
+CREATE TABLE utilization_metric (
+    metric_id SERIAL PRIMARY KEY,
+    run_id INT REFERENCES scan_run(run_id),
+    resource_id INT REFERENCES ec2_instance(resource_id),
+    window_start DATE,
+    window_end DATE,
+    period INT,
+    source VARCHAR(100),
+    missing_data DOUBLE PRECISION,
+    cpu_avg DOUBLE PRECISION,
+    cpu_max DOUBLE PRECISION,
+    cpu_p95 DOUBLE PRECISION,
+    cpu_p99 DOUBLE PRECISION,
+    power_avg DOUBLE PRECISION,
+    power_max DOUBLE PRECISION,
+    power_p95 DOUBLE PRECISION,
+    power_p99 DOUBLE PRECISION,
+    memory_avg DOUBLE PRECISION,
+    memory_max DOUBLE PRECISION,
+    memory_p95 DOUBLE PRECISION,
+    memory_p99 DOUBLE PRECISION,
+    network_avg DOUBLE PRECISION,
+    network_max DOUBLE PRECISION,
+    network_p95 DOUBLE PRECISION,
+    network_p99 DOUBLE PRECISION
+);"
+
+docker compose exec db psql -U postgres -d rightsizer -c "
+CREATE TABLE findings (
+    finding_id SERIAL PRIMARY KEY,
+    run_id INT REFERENCES scan_run(run_id),
+    resource_id INT REFERENCES ec2_instance(resource_id),
+    utilization_metric_id INT REFERENCES utilization_metric(metric_id),
+    assessment VARCHAR(255),
+    status VARCHAR(20),
+    created_on DATE DEFAULT CURRENT_DATE,
+    updated_on DATE,
+    recommendations INT[],
+    constraints VARCHAR(255)
+);
+"
+
+docker compose exec db psql -U postgres -d rightsizer -c "
+CREATE TABLE recommendations (
+    recommendation_id SERIAL PRIMARY KEY,
+    finding_id INT REFERENCES findings(finding_id),
+    recommended_config VARCHAR(255),
+    optimization_category VARCHAR(100),
+    monthly_cost_impact DOUBLE PRECISION,
+    confidence DOUBLE PRECISION,
+    status VARCHAR(20),
+    created_on DATE DEFAULT CURRENT_DATE,
+    updated_on DATE
+);
+"

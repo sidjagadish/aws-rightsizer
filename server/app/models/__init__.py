@@ -1,0 +1,1 @@
+from app.models.scan_run import ScanRun  # noqa: F401

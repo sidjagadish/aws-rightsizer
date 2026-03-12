@@ -1,4 +1,4 @@
-"""Database engine and session. Uses DATABASE_URL from config."""
+""""Database engine and session. Uses DATABASE_URL from config."""
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, declarative_base, sessionmaker
 

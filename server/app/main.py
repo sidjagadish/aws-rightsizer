@@ -16,6 +16,7 @@ app.add_middleware(
 app.include_router(health.router, prefix="/api")
 app.include_router(db.router, prefix="/api")
 
+
 @app.get("/")
 def root():
     return {"message": "AWS Rightsizer API"}

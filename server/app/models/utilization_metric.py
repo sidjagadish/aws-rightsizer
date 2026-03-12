@@ -9,7 +9,7 @@ class UtilizationMetric(Base):
     metric_id = Column(Integer, primary_key=True)
     #run_id = Column(Integer, nullable=False)
     run_id = Column(Integer, ForeignKey("scan_run.run_id"), nullable=False)
-    resource_id = Column(Integer, nullable=False)
+    resource_id = Column(Integer, ForeignKey("ec2_instance.resource_id"), nullable=False)
     window_start = Column(Date, nullable=False)
     window_end = Column(Date, nullable=False)
     period = Column(Integer, nullable=False)

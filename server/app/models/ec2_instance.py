@@ -15,3 +15,5 @@ class EC2Instance(Base):
     platform = Column(String, nullable=False)
     tenancy = Column(String, nullable=False)
     tags = Column(ARRAY(String), nullable=True)
+
+

@@ -53,3 +53,20 @@ if context.is_offline_mode():
     run_migrations_offline()
 else:
     run_migrations_online()
+
+    '''
+    docker compose exec db psql -U postgres -d rightsizer -c "
+    DROP TABLE IF EXISTS scan_run CASCADE;
+    CREATE TABLE scan_run (
+        run_id SERIAL PRIMARY KEY,
+        model_version VARCHAR(100),
+        id_filter INT[],
+        region_filter VARCHAR(50)[],
+        observation_window VARCHAR(50),
+        status VARCHAR(20) NOT NULL DEFAULT 'pending',
+        started_on DATE,
+        completed_on DATE,
+        scanned_count INT DEFAULT 0,
+        initiated_by VARCHAR(100)
+    );"
+    '''

@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api import db, health
+import app.models
+
 
 app = FastAPI(title="AWS Rightsizer API")
 

@@ -7,7 +7,6 @@ class UtilizationMetric(Base):
     __tablename__ = "utilization_metric"
 
     metric_id = Column(Integer, primary_key=True)
-    #run_id = Column(Integer, nullable=False)
     run_id = Column(Integer, ForeignKey("scan_run.run_id"), nullable=False)
     resource_id = Column(Integer, ForeignKey("ec2_instance.resource_id"), nullable=False)
     window_start = Column(Date, nullable=False)

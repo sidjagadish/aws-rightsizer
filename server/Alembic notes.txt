@@ -1,0 +1,5 @@
+
+poetry run alembic upgrade head-- run this for database migration 
+
+
+poetry run alembic downgrade base-- run this for roll back 

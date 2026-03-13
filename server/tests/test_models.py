@@ -54,28 +54,6 @@ def test_ec2_instance_create_and_flush():
 
 
 
-def test_recommendation_create_and_flush():
-    db = SessionLocal()
-    try:
-        rec = Recommendation(
-            recommendation_id=1,
-            finding_id=1,
-            recommended_config="m5.large",
-            optimization_category="rightsizing",
-            monthly_cost_impact=-25.50,
-            confidence=0.92,
-            status="active",
-            created_on=datetime(2025, 1, 1),
-            updated_on=datetime(2025, 1, 2),
-        )
-        db.add(rec)
-        db.flush()
-        assert rec.recommendation_id == 1
-    finally:
-        db.rollback()
-        db.close()
-
-
 def test_utilization_metric_create_and_flush():
     db = SessionLocal()
     try:
@@ -107,20 +85,6 @@ def test_utilization_metric_create_and_flush():
         db.add(instance)
         db.flush()
 
-        finding = Finding(
-            finding_id=1,
-            run_id=1,
-            resource_id=1,
-            utilization_metric_id=1,
-            assessment="undersized",
-            status=FindingStatus_2.open,
-            created_on=datetime(2025, 1, 1),
-            updated_on=datetime(2025, 1, 2),
-            recommendations=[10, 11],
-            constraints="memory_bound",
-        )
-        db.add(finding)
-        db.flush()
 
         metric = UtilizationMetric(
             metric_id=1,
@@ -150,6 +114,23 @@ def test_utilization_metric_create_and_flush():
         )
         db.add(metric)
         db.flush()
+
+        finding = Finding(
+            finding_id=1,
+            run_id=1,
+            resource_id=1,
+            utilization_metric_id=1,
+            assessment="undersized",
+            status=FindingStatus_2.open,
+            created_on=datetime(2025, 1, 1),
+            updated_on=datetime(2025, 1, 2),
+            #recommendations=[10, 11],
+            constraints="memory_bound",
+        )
+        db.add(finding)
+        db.flush()
+
+        
         assert metric.metric_id == 1
     finally:
         db.rollback()
@@ -168,10 +149,32 @@ def test_finding_metric_requires_valid_run_id():
             status=FindingStatus_2.open,
             created_on=datetime(2025, 1, 1),
             updated_on=datetime(2025, 1, 2),
-            recommendations=[10, 11],
+            #recommendations=[10, 11],
             constraints="memory_bound",
         )
         db.add(finding)
+        with pytest.raises(IntegrityError):
+            db.flush()
+    finally:
+        db.rollback()
+        db.close()
+
+def test_recommendation_metric_requires_valid_run_id():
+    db = SessionLocal()
+    try:
+        rec = Recommendation(
+            recommendation_id=1,
+            finding_id=1,
+            recommended_config="m5.large",
+            optimization_category="rightsizing",
+            monthly_cost_impact=-25.50,
+            confidence=0.92,
+            status="active",
+            created_on=datetime(2025, 1, 1),
+            updated_on=datetime(2025, 1, 2),
+        )
+        
+        db.add(rec)
         with pytest.raises(IntegrityError):
             db.flush()
     finally:

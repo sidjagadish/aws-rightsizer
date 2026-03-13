@@ -14,7 +14,7 @@ class FindingStatus(enum.Enum):
 class ScanRun(Base):
     __tablename__ = "scan_run"
 
-    run_id = Column(String, primary_key=True)
+    run_id = Column(Integer, primary_key=True)
     model_version = Column(String)
     id_filter = Column(ARRAY(Integer), nullable=True)
     region_filter = Column(ARRAY(String), nullable=True)

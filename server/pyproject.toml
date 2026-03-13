@@ -28,7 +28,8 @@ dependencies = [
     "uvicorn (==0.40.0)",
     "uvloop (==0.22.1) ; sys_platform != 'win32'",
     "watchfiles (==1.1.1)",
-    "websockets (==16.0)"
+    "websockets (==16.0)",
+    "alembic (>=1.18.4,<2.0.0)"
 ]
 
 

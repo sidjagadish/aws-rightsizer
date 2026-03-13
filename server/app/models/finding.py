@@ -25,5 +25,5 @@ class Finding(Base):
     status = Column(Enum(FindingStatus), nullable=False, default=FindingStatus.open)
     created_on = Column(Date, nullable=False)
     updated_on = Column(Date, nullable=True)
-    recommendations = Column(ARRAY(Integer),ForeignKey("recommendation.recommendation_id"), nullable=True)
+    #recommendations = Column(Integer,ForeignKey("recommendation.recommendation_id"), nullable=True)# Adian wanted this. Its creating a circular dep so comment not remove if he wants something diff.
     constraints = Column(String, nullable=True)

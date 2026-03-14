@@ -28,7 +28,6 @@ def db_ping(db: Session = Depends(get_db)):# this could be far faster and cleane
 
         """Run a trivial query to verify backend ↔ database connectivity."""
         schema = Base.metadata.tables
-        #print(schema) 
         db.execute(text("SELECT 1"))
         db_tables = db.execute(text("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'; ")).scalars().all()
 

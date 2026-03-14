@@ -2,12 +2,13 @@ import enum
 from sqlalchemy import Column, String, Integer, DateTime, Enum
 from sqlalchemy.dialects.postgresql import ARRAY
 from app.db import Base
+from app.models.finding_status import FindingStatus
 
-class FindingStatus(enum.Enum):
-    open = "open"
-    resolved = "resolved"
-    dismissed = "dismissed"
-    in_progress = "in_progress"
+# class FindingStatus(enum.Enum):
+#     open = "open"
+#     resolved = "resolved"
+#     dismissed = "dismissed"
+#     in_progress = "in_progress"
 
 
 

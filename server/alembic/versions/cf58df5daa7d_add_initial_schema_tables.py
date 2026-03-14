@@ -113,4 +113,6 @@ def downgrade() -> None:
     op.drop_table('utilization_metric')
     op.drop_table('scan_run')
     op.drop_table('ec2_instance')
+    op.execute("DROP TYPE IF EXISTS findingstatus")
+    #op.execute("DROP TYPE IF EXISTS FindingStatus")
     # ### end Alembic commands ###

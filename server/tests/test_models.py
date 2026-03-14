@@ -7,8 +7,16 @@ from app.models.recommendation import Recommendation
 from app.models.utilization_metric import UtilizationMetric
 import pytest
 from sqlalchemy.exc import IntegrityError
+import subprocess
 
 
+@pytest.fixture(scope="module", autouse=True)
+def ensure_schema():
+    """Re-apply migrations in case another test file wiped the DB."""
+    subprocess.run(
+        "poetry run alembic upgrade head",
+        shell=True, capture_output=True, text=True,
+    )
 
 def test_scan_run_create_and_flush():
     db = SessionLocal()
@@ -130,7 +138,7 @@ def test_utilization_metric_create_and_flush():
         db.add(finding)
         db.flush()
 
-        
+
         assert metric.metric_id == 1
     finally:
         db.rollback()

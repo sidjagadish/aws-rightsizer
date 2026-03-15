@@ -1,0 +1,136 @@
+AWS Rightsizer API — Route & Error Conventions
+================================================
+Last updated: 2026-03-15
+Location:     server/docs/api_conventions.txt
+
+Keep this file in sync as endpoints are added or changed.
+
+
+1. GENERAL CONVENTIONS
+----------------------
+Base URL:           http://localhost:8000
+Global prefix:      /api
+All entity routes:  /api/{plural_noun}
+Single resource:    /api/{plural_noun}/{id}
+HTTP verbs:         POST = create, GET = read (no PUT/PATCH/DELETE yet)
+Content type:       application/json (request and response)
+PK field naming:    {entity}_id  (e.g. run_id, resource_id, finding_id)
+
+
+2. ENTITY BASE PATHS
+---------------------
+Entity               Base Path              PK Field           Router File
+--------------------------------------------------------------------
+Health               /api/health            —                  health.py
+DB Ping              /api/db/ping           —                  db.py
+ScanRun              /api/runs              run_id             runs.py
+EC2Instance          /api/instances         resource_id        instance.py
+UtilizationMetric    /api/metrics           metric_id          metrics.py
+Finding              /api/findings          finding_id         findings.py
+Recommendation       /api/recommendations   recommendation_id  recommendations.py
+
+
+3. ENDPOINT CATALOG
+-------------------
+
+Health / Infrastructure
+  GET  /api/health              → { "status": "ok" }
+  GET  /api/db/ping             → { "status": "ok", "database": "connected" }
+
+ScanRun
+  POST /api/runs                → 201  create a scan run
+  GET  /api/runs                → 200  list runs (paginated)
+  GET  /api/runs/{run_id}       → 200  get one run
+
+EC2Instance
+  POST /api/instances           → 201  create an instance
+  GET  /api/instances           → 200  list instances (paginated)
+  GET  /api/instances/{resource_id} → 200  get one instance
+
+UtilizationMetric
+  POST /api/metrics             → 201  create a metric (FK: run_id, resource_id)
+  GET  /api/metrics             → 200  list metrics (paginated)
+  GET  /api/metrics/{metric_id} → 200  get one metric
+
+  Query filters:  run_id, resource_id
+
+Finding
+  POST /api/findings            → 201  create a finding (FK: run_id, resource_id, metric_id)
+  GET  /api/findings            → 200  list findings (paginated)
+  GET  /api/findings/{finding_id} → 200  get one finding
+
+  Query filters:  run_id, resource_id, status, assessment
+  Note:           status is constrained to: open | resolved | dismissed | in_progress
+
+Recommendation
+  POST /api/recommendations               → 201  create a recommendation (FK: finding_id)
+  GET  /api/recommendations               → 200  list recommendations (paginated)
+  GET  /api/recommendations/{recommendation_id} → 200  get one recommendation
+
+  Query filters:  finding_id, run_id (joins through finding), status, category
+
+
+4. STANDARD QUERY PARAMETERS (LIST ENDPOINTS)
+----------------------------------------------
+Parameter   Type   Default   Constraints         Description
+------------------------------------------------------------------------
+page        int    1         ge=1                Page number (1-indexed)
+page_size   int    20        ge=1, le=100        Items per page
+
+All list endpoints return the same envelope:
+
+  {
+    "items":     [ ... ],      // array of entity objects
+    "total":     42,           // total matching rows (before pagination)
+    "page":      1,            // current page
+    "page_size": 20            // requested page size
+  }
+
+Entity-specific filters are query params on the list endpoint (see §3).
+Filters are AND-combined when multiple are provided.
+Unrecognized query params are silently ignored by FastAPI.
+
+
+5. STANDARD ERROR FORMAT
+-------------------------
+All errors use the FastAPI/Starlette default JSON shape:
+
+  {
+    "detail": "Human-readable message"
+  }
+
+Status codes used:
+
+  201  Created        — successful POST, response body is the new entity
+  200  OK             — successful GET
+  404  Not Found      — entity ID does not exist, or FK target missing
+       detail format: "{EntityName} {id} not found"
+       examples:      "ScanRun 42 not found"
+                      "EC2Instance 999 not found"
+                      "Finding 7 not found"
+  422  Unprocessable  — request body fails Pydantic validation
+       detail format: FastAPI auto-generated array of validation errors
+       triggers:      missing required field, wrong type, bad date format,
+                      invalid enum value (e.g. status="banana")
+
+FK enforcement pattern (applied in POST handlers):
+  Before inserting, the handler checks each FK reference with db.get().
+  If the referenced row does not exist, it returns 404 with the entity
+  name and ID in the detail message. Checks run in this order:
+    1. run_id  →  ScanRun
+    2. resource_id  →  EC2Instance
+    3. utilization_metric_id  →  UtilizationMetric  (findings only)
+    4. finding_id  →  Finding  (recommendations only)
+
+
+6. NAMING RULES (for adding new endpoints)
+-------------------------------------------
+- Route noun is always plural:           /api/findings   not /api/finding
+- PK path param matches the DB column:   /{finding_id}   not /{id}
+- Router variable naming:                {entity}_router  (e.g. findings_router)
+- Schema file naming:                    {entity}_schema.py
+- Router file naming:                    {entity_plural}.py
+- Tags match the entity noun:            tags=["findings"]
+- POST returns 201, GET returns 200
+- All list endpoints support page + page_size
+- Filters go on the list GET as query params, not in the path

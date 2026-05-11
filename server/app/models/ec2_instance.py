@@ -11,6 +11,7 @@ class EC2Instance(Base):
     arn = Column(String, unique=True, nullable=False, index=True)
     region = Column(String, nullable=False, index=True)
     owner_id = Column(Integer, nullable=False, index=True)
+    instance_type = Column(String, nullable=False)
     architecture = Column(String, nullable=False)
     platform = Column(String, nullable=False)
     tenancy = Column(String, nullable=False)

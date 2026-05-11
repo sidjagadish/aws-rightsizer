@@ -70,6 +70,7 @@ class TestCreateInstances:
             "arn": "arn:aws:ec2:us-east-1:1:instances/i-abc123",
             "region": "us-east-1",
             "owner_id": 1,
+            "instance_type": "m5.large",
             "architecture": "x86_64",
             "platform": "Linux/UNIX",
             "tenancy": "default",
@@ -97,6 +98,7 @@ class TestListInstances:
             "arn": "arn:aws:ec2:us-east-1:1:instances/i-default",
             "region": "us-east-1",
             "owner_id": 1,
+            "instance_type": "m5.large",
             "architecture": "x86_64",
             "platform": "Linux/UNIX",
             "tenancy": "default",
@@ -153,6 +155,7 @@ class TestListInstances:
             "arn": "arn:aws:ec2:eu-west-1:999:instances/i-fields",
             "region": "eu-west-1",
             "owner_id": 999,
+            "instance_type": "c5.xlarge",
             "architecture": "arm64",
             "platform": "Windows",
             "tenancy": "dedicated",
@@ -168,6 +171,7 @@ class TestListInstances:
         assert item["arn"] == payload["arn"]
         assert item["region"] == payload["region"]
         assert item["owner_id"] == payload["owner_id"]
+        assert item["instance_type"] == payload["instance_type"]
         assert item["architecture"] == payload["architecture"]
         assert item["platform"] == payload["platform"]
         assert item["tenancy"] == payload["tenancy"]
@@ -210,6 +214,7 @@ class TestGetInstance:
             "arn": "arn:aws:ec2:us-east-1:1:instances/i-default",
             "region": "us-east-1",
             "owner_id": 1,
+            "instance_type": "m5.large",
             "architecture": "x86_64",
             "platform": "Linux/UNIX",
             "tenancy": "default",
@@ -234,6 +239,7 @@ class TestGetInstance:
             "arn": "arn:aws:ec2:eu-west-1:42:instances/i-fields",
             "region": "eu-west-1",
             "owner_id": 42,
+            "instance_type": "t3.medium",
             "architecture": "arm64",
             "platform": "Windows",
             "tenancy": "dedicated",
@@ -249,6 +255,7 @@ class TestGetInstance:
         assert body["arn"] == payload["arn"]
         assert body["region"] == payload["region"]
         assert body["owner_id"] == payload["owner_id"]
+        assert body["instance_type"] == payload["instance_type"]
         assert body["architecture"] == payload["architecture"]
         assert body["platform"] == payload["platform"]
         assert body["tenancy"] == payload["tenancy"]
@@ -280,6 +287,7 @@ class TestUpsertInstance:
             "arn": "arn:aws:ec2:us-east-1:1:instance/i-upsert",
             "region": "us-east-1",
             "owner_id": 1,
+            "instance_type": "m5.large",
             "architecture": "x86_64",
             "platform": "Linux/UNIX",
             "tenancy": "default",
@@ -306,6 +314,7 @@ class TestUpsertInstance:
         base = {
             "region": "us-east-1",
             "owner_id": 1,
+            "instance_type": "m5.large",
             "architecture": "x86_64",
             "platform": "Linux/UNIX",
             "tenancy": "default",

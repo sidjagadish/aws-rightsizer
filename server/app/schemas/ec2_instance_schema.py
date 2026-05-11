@@ -13,6 +13,7 @@ class EC2InstanceCreate(BaseModel):
     arn: str
     region: str
     owner_id: int
+    instance_type: str
     architecture: str
     platform: str
     tenancy: str
@@ -28,6 +29,7 @@ class EC2InstanceResponse(BaseModel):
     arn: str
     region: str
     owner_id: int
+    instance_type: str
     architecture: str
     platform: str
     tenancy: str
